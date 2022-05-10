@@ -4,6 +4,7 @@
 
 <%
     transactions = Transaction.all
+    users = User.all
 %>
 
 <ol>
@@ -27,7 +28,15 @@
     <% end %>
 </ol>
 
-<!-- Step 2: Calculate and display the balances -->
+<ul>
+    <% for user in users %>
+        <% balance = Transaction.where({ "to_user_id" => user["id"] }).sum("amount")-Transaction.where({ "from_user_id" => user["id"] }).sum("amount") %>
+        <li>
+            Balance for <%= user["name"] %>:
+            <%= balance %> KC
+        </li>
+    <% end %>
+</ul>
 
 <!-- 
 Expected balances:
@@ -37,3 +46,18 @@ Balance for Evan: 1164 KC
 Balance for Anthony: 1456 KC
 Balance for Krystina: 3516 KC 
 -->
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Balance (KC)</th>
+    </tr>
+    <% for user in users %>
+        <% balance = Transaction.where({ "to_user_id" => user["id"] }).sum("amount")-Transaction.where({ "from_user_id" => user["id"] }).sum("amount") %>
+        <tr>
+            <td><%= user["name"] %></td>
+            <td><%= balance %></td>
+        </tr>
+    <% end %>
+    </tr>
+</table>
